@@ -14,6 +14,6 @@ rm -rf package/feeds/packages/mqttled
 rm -rf package/feeds/packages/utils/mqttled
 rm -rf feeds/packages/utils/mqttled
 rm -rf feeds/packages/mqttled
-
+rm -rf feeds/packages/onionshare-cli
 ./scripts/feeds update -a
 ./scripts/feeds install -a
