@@ -25,5 +25,8 @@ rm -rf package/feeds/packages/utils/mqttled
 rm -rf feeds/packages/utils/mqttled
 rm -rf feeds/packages/mqttled
 rm -rf feeds/packages/onionshare-cli
+find $TARGET_DIR/lib/modules -name "*usb*" -type f -delete 2>/dev/null || true
+rm -rf $TARGET_DIR/packages/kmod-usb*.ipk 2>/dev/null || true
+rm -rf $BIN_DIR/packages/*/kmod-usb*.ipk 2>/dev/null || true
 ./scripts/feeds update -a
 ./scripts/feeds install -a
