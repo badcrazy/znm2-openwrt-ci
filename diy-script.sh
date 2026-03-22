@@ -2,6 +2,8 @@
 # 添加额外插件
 rm -rf luci/applications/luci-app-adguardhome
 rm -rf packages/net/adguardhome
+rm -rf feeds/luci/applications/luci-app-adguardhome
+rm -rf feeds/packages/net/adguardhome
 git clone --depth=1 https://github.com/sirpdboy/luci-app-adguardhome package/luci-app-adguardhome
 git clone --depth=1 https://github.com/EasyTier/luci-app-easytier package/luci-app-easytier
 # 科学上网插件
