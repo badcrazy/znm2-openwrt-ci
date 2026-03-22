@@ -9,7 +9,7 @@ git clone --depth=1 https://github.com/EasyTier/luci-app-easytier package/luci-a
 # git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall2 package/luci-app-passwall2
 # git_sparse_clone master https://github.com/vernesong/OpenClash luci-app-openclash
 rm -rf package/helloworld
-git clone --depth=1 https://github.com/fw876/helloworld.git package/helloworld
+git clone --depth=1 https://github.com/fw876/helloworld package/helloworld
 # Themes
 rm -rf package/feeds/packages/mqttled
 rm -rf package/feeds/packages/utils/mqttled
