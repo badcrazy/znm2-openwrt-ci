@@ -18,7 +18,7 @@ rm -rf packages/net/{xray-core,v2ray-geodata,sing-box,chinadns-ng,dns2socks,hyst
 # 移除 openwrt feeds 过时的luci版本
 rm -rf feeds/luci/applications/luci-app-passwall
 rm -rf luci/applications/luci-app-passwall
-git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2
+git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2 package/luci-app-passwall2
 # Themes
 rm -rf package/feeds/packages/mqttled
 rm -rf package/feeds/packages/utils/mqttled
