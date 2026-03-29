@@ -19,11 +19,10 @@ git clone --depth=1 https://github.com/EasyTier/luci-app-easytier package/luci-a
 # rm -rf feeds/luci/applications/luci-app-passwall
 # rm -rf luci/applications/luci-app-passwall
 # git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2 package/luci-app-passwall2
-# Themes
-rm -rf package/feeds/packages/mqttled
-rm -rf package/feeds/packages/utils/mqttled
-rm -rf feeds/packages/utils/mqttled
-rm -rf feeds/packages/mqttled
-rm -rf feeds/packages/onionshare-cli
+
 ./scripts/feeds update -a
 ./scripts/feeds install -a
+./scripts/feeds uninstall wpad-openssl
+./scripts/feeds uninstall ath11k-firmware-ipq6018
+./scripts/feeds uninstall kmod-usb-core
+./scripts/feeds uninstall kmod-ath11k
