@@ -2,8 +2,8 @@
 
 # ==================== 禁用无线驱动 ====================
 # 内核级禁用
-sed -i 's/CONFIG_WLAN=y/CONFIG_WLAN=n/' target/linux/ipq60xx/config-6.12
-sed -i 's/CONFIG_WIRELESS=y/CONFIG_WIRELESS=n/' target/linux/ipq60xx/config-6.12
+sed -i 's/CONFIG_WLAN=y/CONFIG_WLAN=n/' target/linux/qualcommax/ipq60xx/config-default
+sed -i 's/CONFIG_WIRELESS=y/CONFIG_WIRELESS=n/' target/linux/qualcommax/ipq60xx/config-default
 
 # 禁用无线模块
 for module in \
