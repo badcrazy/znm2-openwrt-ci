@@ -46,7 +46,7 @@ done
 
 # ==================== 禁用USB驱动 ====================
 # 内核级禁用
-sed -i 's/CONFIG_USB=y/CONFIG_USB=n/' target/linux/ipq60xx/config-6.12
+sed -i 's/CONFIG_USB=y/CONFIG_USB=n/' target/linux/qualcommax/config-6.12
 echo "CONFIG_USB_SUPPORT=n" >> .config
 
 # 禁用USB模块
