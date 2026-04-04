@@ -1,28 +1,72 @@
 #!/bin/bash
-# 添加额外插件
-rm -rf feeds/luci/applications/luci-app-adguardhome
-rm -rf feeds/packages/net/adguardhome
-rm -rf luci/applications/luci-app-adguardhome
-rm -rf packages/net/adguardhome
-git clone --depth=1 https://github.com/sirpdboy/luci-app-adguardhome package/luci-app-adguardhome
-git clone --depth=1 https://github.com/EasyTier/luci-app-easytier package/luci-app-easytier
-# 科学上网插件
-# git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall-packages package/openwrt-passwall
-# git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall package/luci-app-passwall
-# git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall2 package/luci-app-passwall2
-# git_sparse_clone master https://github.com/vernesong/OpenClash luci-app-openclash
-# rm -rf package/helloworld
-# 移除 openwrt feeds 自带的核心库
-# rm -rf feeds/packages/net/{xray-core,v2ray-geodata,sing-box,chinadns-ng,dns2socks,hysteria,ipt2socks,microsocks,naiveproxy,shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev,simple-obfs,tcping,trojan-plus,tuic-client,v2ray-plugin,xray-plugin,geoview,shadow-tls}
-# rm -rf packages/net/{xray-core,v2ray-geodata,sing-box,chinadns-ng,dns2socks,hysteria,ipt2socks,microsocks,naiveproxy,shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev,simple-obfs,tcping,trojan-plus,tuic-client,v2ray-plugin,xray-plugin,geoview,shadow-tls}
-# 移除 openwrt feeds 过时的luci版本
-# rm -rf feeds/luci/applications/luci-app-passwall
-# rm -rf luci/applications/luci-app-passwall
-# git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2 package/luci-app-passwall2
 
+# ==================== 禁用无线驱动 ====================
+# 内核级禁用
+sed -i 's/CONFIG_WLAN=y/CONFIG_WLAN=n/' target/linux/ipq60xx/config-6.12
+sed -i 's/CONFIG_WIRELESS=y/CONFIG_WIRELESS=n/' target/linux/ipq60xx/config-6.12
+
+# 禁用无线模块
+for module in \
+    kmod-mac80211 kmod-cfg80211 \
+    kmod-ath11k kmod-ath10k kmod-ath9k \
+    kmod-mt76-core kmod-mt76x02-common kmod-mt76x2
+do
+    echo "CONFIG_PACKAGE_${module}=n" >> .config
+done
+
+# 禁用无线固件
+for firmware in \
+    ath11k-firmware-ipq6018 \
+    ath10k-firmware-qca988x \
+    ath10k-firmware-qca9888 \
+    ath10k-firmware-qca9984
+do
+    echo "CONFIG_PACKAGE_${firmware}=n" >> .config
+done
+
+# 禁用无线工具
+for tool in \
+    wpad-openssl hostapd-common iw hostapd-utils
+do
+    echo "CONFIG_PACKAGE_${tool}=n" >> .config
+done
+
+# ==================== 禁用USB驱动 ====================
+# 内核级禁用
+sed -i 's/CONFIG_USB=y/CONFIG_USB=n/' target/linux/ipq60xx/config-6.12
+echo "CONFIG_USB_SUPPORT=n" >> .config
+
+# 禁用USB模块
+for module in \
+    kmod-usb-core kmod-usb-ohci kmod-usb-uhci \
+    kmod-usb-xhci kmod-usb-storage kmod-usb-net \
+    kmod-usb-net-asix kmod-usb-net-rtl8152 \
+    kmod-usb2 kmod-usb3
+do
+    echo "CONFIG_PACKAGE_${module}=n" >> .config
+done
+
+# ==================== 清理并安装插件 ====================
+# 正确清理路径（绝对路径）
+clean_paths=(
+    "${GITHUB_WORKSPACE}/openwrt/feeds/luci/applications/luci-app-adguardhome"
+    "${GITHUB_WORKSPACE}/openwrt/feeds/packages/net/adguardhome"
+    "${GITHUB_WORKSPACE}/openwrt/package/feeds/luci/luci-app-adguardhome"
+    "${GITHUB_WORKSPACE}/openwrt/package/feeds/packages/adguardhome"
+)
+
+for path in "${clean_paths[@]}"; do
+    if [ -d "$path" ]; then
+        rm -rf "$path"
+    fi
+done
+
+# 安装插件
+cd "${GITHUB_WORKSPACE}/openwrt/package" || exit 1
+[ ! -d "luci-app-adguardhome" ] && git clone --depth=1 https://github.com/sirpdboy/luci-app-adguardhome
+[ ! -d "luci-app-easytier" ] && git clone --depth=1 https://github.com/EasyTier/luci-app-easytier
+
+# ==================== 更新feeds ====================
+cd "${GITHUB_WORKSPACE}/openwrt" || exit 1
 ./scripts/feeds update -a
 ./scripts/feeds install -a
-./scripts/feeds uninstall wpad-openssl
-./scripts/feeds uninstall ath11k-firmware-ipq6018
-./scripts/feeds uninstall kmod-usb-core
-./scripts/feeds uninstall kmod-ath11k
