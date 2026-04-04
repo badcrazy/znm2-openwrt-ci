@@ -1,9 +1,22 @@
 #!/bin/bash
 
 # ==================== 禁用无线驱动 ====================
-# 内核级禁用
-sed -i 's/CONFIG_WLAN=y/CONFIG_WLAN=n/' target/linux/qualcommax/ipq60xx/config-default
-sed -i 's/CONFIG_WIRELESS=y/CONFIG_WIRELESS=n/' target/linux/qualcommax/ipq60xx/config-default
+# 删除target.mk中的无线相关包
+sed -i '/DEFAULT_PACKAGES +=/ {
+    s/ath11k-firmware-ipq6018//g
+    s/kmod-qca-nss-drv//g
+    s/kmod-qca-nss-crypto//g
+}' target/linux/qualcommax/ipq60xx/target.mk
+
+# 确保不包含任何ath11k相关包
+echo 'DEFAULT_PACKAGES := $(filter-out ath11k%, $(DEFAULT_PACKAGES))' >> target/linux/qualcommax/ipq60xx/Makefile
+
+# 禁用内核无线子系统
+sed -i 's/CONFIG_WLAN=y/CONFIG_WLAN=n/' target/linux/qualcommax/config-6.12
+sed -i 's/CONFIG_ATH11K=y/CONFIG_ATH11K=n/' target/linux/qualcommax/config-6.12
+
+# 强制关闭NSS无线加速
+sed -i 's/CONFIG_NSS_DRV_PPE_ENABLE=y/CONFIG_NSS_DRV_PPE_ENABLE=n/' target/linux/qualcommax/config-6.12
 
 # 禁用无线模块
 for module in \
