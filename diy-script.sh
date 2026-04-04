@@ -2,8 +2,6 @@
 
 # ==================== 禁用无线驱动 ====================
 # 删除target.mk中的无线相关包
-# 修改 target.mk
-# 修改 target.mk
 sed -i 's/DEFAULT_PACKAGES += ath11k-firmware-ipq6018 nss-firmware-ipq60xx kmod-qca-nss-crypto/DEFAULT_PACKAGES += nss-firmware-ipq60xx kmod-qca-nss-crypto/' target/linux/qualcommax/ipq60xx/target.mk
 
 # 确保不包含任何ath11k相关包
