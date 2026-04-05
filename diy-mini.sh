@@ -9,7 +9,7 @@ git clone --depth=1 https://github.com/EasyTier/luci-app-easytier package/luci-a
 # 科学上网插件
 # git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall-packages package/openwrt-passwall
 # git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall package/luci-app-passwall
-# git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall2 package/luci-app-passwall2
+git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2 package/luci-app-passwall2
 # git_sparse_clone master https://github.com/vernesong/OpenClash luci-app-openclash
 # git clone --depth=1 https://github.com/frazy/luci-app-singbox-configs package/luci-app-singbox
 # rm -rf package/helloworld
@@ -19,7 +19,6 @@ git clone --depth=1 https://github.com/EasyTier/luci-app-easytier package/luci-a
 # 移除 openwrt feeds 过时的luci版本
 rm -rf feeds/luci/applications/luci-app-passwall
 rm -rf luci/applications/luci-app-passwall
-# git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2 package/luci-app-passwall2
 
 ./scripts/feeds update -a
 ./scripts/feeds install -a
