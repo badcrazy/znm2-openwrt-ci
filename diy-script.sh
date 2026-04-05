@@ -74,7 +74,7 @@ done
 cd "${GITHUB_WORKSPACE}/openwrt/package" || exit 1
 [ ! -d "luci-app-adguardhome" ] && git clone --depth=1 https://github.com/sirpdboy/luci-app-adguardhome
 [ ! -d "luci-app-easytier" ] && git clone --depth=1 https://github.com/EasyTier/luci-app-easytier
-
+[ ! -d "luci-app-easytier" ] && git clone --depth=1 https://github.com/EasyTier/luci-app-easytier
 # ==================== 更新feeds ====================
 cd "${GITHUB_WORKSPACE}/openwrt" || exit 1
 ./scripts/feeds update -a
