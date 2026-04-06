@@ -7,9 +7,11 @@ rm -rf packages/net/adguardhome
 git clone --depth=1 https://github.com/sirpdboy/luci-app-adguardhome package/luci-app-adguardhome
 git clone --depth=1 https://github.com/EasyTier/luci-app-easytier package/luci-app-easytier
 # 科学上网插件
+ rm -rf feeds/packages/net/{xray-core, v2ray-core, v2ray-geodata, sing-box} 2>/dev/null
+ rm -rf feeds/luci/applications/luci-app-passwall 2>/dev/nul
 # git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall-packages package/openwrt-passwall
 # git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall package/luci-app-passwall
-# git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2 package/luci-app-passwall2
+git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2 package/luci-app-passwall2
 # git_sparse_clone master https://github.com/vernesong/OpenClash luci-app-openclash
 # git clone --depth=1 https://github.com/frazy/luci-app-singbox-configs package/luci-app-singbox
 # rm -rf package/helloworld
