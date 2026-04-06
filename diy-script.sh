@@ -1,81 +1,66 @@
 #!/bin/bash
+# diy.sh - 简化的中文支持版本
 
-# ==================== 禁用无线驱动 ====================
-# 删除target.mk中的无线相关包
-sed -i 's/DEFAULT_PACKAGES += ath11k-firmware-ipq6018 nss-firmware-ipq60xx kmod-qca-nss-crypto/DEFAULT_PACKAGES += nss-firmware-ipq60xx kmod-qca-nss-crypto/' target/linux/qualcommax/ipq60xx/target.mk
+echo "开始DIY脚本..."
 
-# 确保不包含任何ath11k相关包
-echo 'DEFAULT_PACKAGES := $(filter-out ath11k%, $(DEFAULT_PACKAGES))' >> target/linux/qualcommax/ipq60xx/Makefile
+# 1. 清理插件
+rm -rf feeds/luci/applications/luci-app-passwall
+rm -rf feeds/luci/applications/luci-app-adguardhome
+rm -rf feeds/packages/net/adguardhome
 
-# 禁用内核无线子系统
-sed -i 's/CONFIG_WLAN=y/CONFIG_WLAN=n/' target/linux/qualcommax/config-6.12
-sed -i 's/CONFIG_ATH11K=y/CONFIG_ATH11K=n/' target/linux/qualcommax/config-6.12
+# 2. 添加额外插件
+git clone --depth=1 https://github.com/sirpdboy/luci-app-adguardhome package/luci-app-adguardhome
+git clone --depth=1 https://github.com/EasyTier/luci-app-easytier package/luci-app-easytier
+git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2 package/luci-app-passwall2
 
-# 强制关闭NSS无线加速
-sed -i 's/CONFIG_NSS_DRV_PPE_ENABLE=y/CONFIG_NSS_DRV_PPE_ENABLE=n/' target/linux/qualcommax/config-6.12
+# 3. 强制中文支持 - 关键步骤
+echo "强制启用中文支持..."
 
-# 禁用无线模块
-for module in \
-    kmod-mac80211 kmod-cfg80211 \
-    kmod-ath11k kmod-ath10k kmod-ath9k \
-    kmod-mt76-core kmod-mt76x02-common kmod-mt76x2
-do
-    echo "CONFIG_PACKAGE_${module}=n" >> .config
-done
+# 确保.config文件存在且包含中文配置
+if [ -f .config ]; then
+    # 添加中文语言包配置（如果不存在）
+    if ! grep -q "CONFIG_LUCI_LANG_zh-cn=y" .config; then
+        echo "CONFIG_LUCI_LANG_zh-cn=y" >> .config
+    fi
+    
+    # 确保基本的中文包被选中
+    for lang_pkg in \
+        luci-i18n-base-zh-cn \
+        luci-i18n-firewall-zh-cn \
+        luci-i18n-package-manager-zh-cn \
+        luci-i18n-upnp-zh-cn \
+        luci-i18n-autoreboot-zh-cn \
+        luci-i18n-cpufreq-zh-cn \
+        luci-i18n-adguardhome-zh-cn \
+        luci-i18n-passwall2-zh-cn
+    do
+        if ! grep -q "CONFIG_PACKAGE_${lang_pkg}=y" .config; then
+            echo "CONFIG_PACKAGE_${lang_pkg}=y" >> .config
+        fi
+    done
+    
+    # 删除可能冲突的英文配置
+    sed -i '/CONFIG_LUCI_LANG_en=y/d' .config
+else
+    echo "错误：.config 文件不存在！"
+    exit 1
+fi
 
-# 禁用无线固件
-for firmware in \
-    ath11k-firmware-ipq6018 \
-    ath10k-firmware-qca988x \
-    ath10k-firmware-qca9888 \
-    ath10k-firmware-qca9984
-do
-    echo "CONFIG_PACKAGE_${firmware}=n" >> .config
-done
+# 4. 修复插件的中文目录链接
+echo "修复插件的中文目录..."
 
-# 禁用无线工具
-for tool in \
-    wpad-openssl hostapd-common iw hostapd-utils
-do
-    echo "CONFIG_PACKAGE_${tool}=n" >> .config
-done
-
-# ==================== 禁用USB驱动 ====================
-# 内核级禁用
-sed -i 's/CONFIG_USB=y/CONFIG_USB=n/' target/linux/qualcommax/config-6.12
-echo "CONFIG_USB_SUPPORT=n" >> .config
-
-# 禁用USB模块
-for module in \
-    kmod-usb-core kmod-usb-ohci kmod-usb-uhci \
-    kmod-usb-xhci kmod-usb-storage kmod-usb-net \
-    kmod-usb-net-asix kmod-usb-net-rtl8152 \
-    kmod-usb2 kmod-usb3
-do
-    echo "CONFIG_PACKAGE_${module}=n" >> .config
-done
-
-# ==================== 清理并安装插件 ====================
-# 正确清理路径（绝对路径）
-clean_paths=(
-    "${GITHUB_WORKSPACE}/openwrt/feeds/luci/applications/luci-app-adguardhome"
-    "${GITHUB_WORKSPACE}/openwrt/feeds/packages/net/adguardhome"
-    "${GITHUB_WORKSPACE}/openwrt/package/feeds/luci/luci-app-adguardhome"
-    "${GITHUB_WORKSPACE}/openwrt/package/feeds/packages/adguardhome"
-)
-
-for path in "${clean_paths[@]}"; do
-    if [ -d "$path" ]; then
-        rm -rf "$path"
+# 修复所有luci-app的中文目录
+find package/ feeds/ -name "luci-app-*" -type d 2>/dev/null | while read app_dir; do
+    if [ -d "$app_dir/po" ]; then
+        # 创建 zh-cn 和 zh_Hans 的相互链接
+        if [ -d "$app_dir/po/zh_Hans" ] && [ ! -L "$app_dir/po/zh-cn" ]; then
+            ln -sf zh_Hans "$app_dir/po/zh-cn"
+            echo "为 $(basename $app_dir) 创建 zh-cn 链接"
+        fi
+        if [ -d "$app_dir/po/zh-cn" ] && [ ! -L "$app_dir/po/zh_Hans" ]; then
+            ln -sf zh-cn "$app_dir/po/zh_Hans"
+            echo "为 $(basename $app_dir) 创建 zh_Hans 链接"
+        fi
     fi
 done
-
-# 安装插件
-cd "${GITHUB_WORKSPACE}/openwrt/package" || exit 1
-[ ! -d "luci-app-adguardhome" ] && git clone --depth=1 https://github.com/sirpdboy/luci-app-adguardhome
-[ ! -d "luci-app-easytier" ] && git clone --depth=1 https://github.com/EasyTier/luci-app-easytier
-[ ! -d "luci-app-passwall2" ] && git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2
-# ==================== 更新feeds ====================
-cd "${GITHUB_WORKSPACE}/openwrt" || exit 1
-./scripts/feeds update -a
-./scripts/feeds install -a
+echo "DIY脚本执行完成！"
