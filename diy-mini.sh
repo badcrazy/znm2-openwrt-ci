@@ -6,7 +6,7 @@ rm -rf feeds/packages/net/v2ray-geodata 2>/dev/null || true
 rm -rf feeds/packages/net/{chinadns-ng,dns2socks,dns2tcp,ipt2socks,libevent2} 2>/dev/null || true
 rm -rf feeds/luci/applications/luci-app-adguardhome
 rm -rf feeds/packages/net/adguardhome
-./scripts/feeds clean
+
 # 添加额外插件
 git clone --depth=1 https://github.com/sirpdboy/luci-app-adguardhome package/luci-app-adguardhome
 git clone --depth=1 https://github.com/EasyTier/luci-app-easytier package/luci-app-easytier
