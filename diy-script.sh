@@ -10,19 +10,7 @@ git clone --depth=1 https://github.com/sirpdboy/luci-app-adguardhome package/luc
 git clone --depth=1 https://github.com/EasyTier/luci-app-easytier package/luci-app-easytier
 git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2 package/luci-app-passwall2
 
-# 3. 修复中文目录（只创建 zh-cn）
-echo "修复中文目录..."
-find package/ feeds/ -name "luci-app-*" -type d 2>/dev/null | while read app_dir; do
-    if [ -d "$app_dir/po" ]; then
-        # 只创建 zh-cn 链接
-        if [ -d "$app_dir/po/zh_Hans" ] && [ ! -e "$app_dir/po/zh-cn" ]; then
-            ln -sf zh_Hans "$app_dir/po/zh-cn"
-            echo "为 $(basename $app_dir) 创建 zh-cn 链接"
-        fi
-    fi
-done
-
-# 4. 确保 .config 包含中文配置
+# 3. 确保 .config 包含中文配置
 if [ -f .config ]; then
     echo "确保中文配置..."
     if ! grep -q "CONFIG_LUCI_LANG_zh-cn=y" .config; then
