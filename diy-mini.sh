@@ -1,9 +1,6 @@
 #!/bin/bash
 # 清理插件
-rm -rf feeds/packages/net/{xray-core,v2ray-geodata,sing-box,chinadns-ng,dns2socks,hysteria,ipt2socks,microsocks,naiveproxy,shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev,simple-obfs,tcping,trojan-plus,tuic-client,v2ray-plugin,xray-plugin,geoview,shadow-tls} 2>/dev/null || true
-rm -rf feeds/luci/applications/luci-app-passwall 2>/dev/null || true
-rm -rf feeds/packages/net/v2ray-geodata 2>/dev/null || true
-rm -rf feeds/packages/net/{chinadns-ng,dns2socks,dns2tcp,ipt2socks,libevent2} 2>/dev/null || true
+rm -rf feeds/luci/applications/luci-app-passwall
 rm -rf feeds/luci/applications/luci-app-adguardhome
 rm -rf feeds/packages/net/adguardhome
 
