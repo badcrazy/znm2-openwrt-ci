@@ -22,5 +22,6 @@ git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2 packag
 # rm -rf feeds/luci/applications/luci-app-passwall
 # rm -rf luci/applications/luci-app-passwall
 
+./scripts/feeds clean
 ./scripts/feeds update -a
 ./scripts/feeds install -a
