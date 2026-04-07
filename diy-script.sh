@@ -1,8 +1,5 @@
 echo "开始DIY脚本..."
-# 替换 feeds.conf.default
-[ -f "feeds/6.12.txt" ] && cp -f feeds/6.12.txt feeds.conf.default
-./scripts/feeds update -a
-./scripts/feeds install -a
+
 # 1. 清理插件
 rm -rf feeds/luci/applications/luci-app-passwall
 rm -rf feeds/luci/applications/luci-app-adguardhome
