@@ -1,10 +1,9 @@
 #!/bin/bash
-# 添加 helloworld feed
-echo "src-git helloworld https://github.com/fw876/helloworld.git" >> feeds.conf.default
 
-# 更新并安装 helloworld
-./scripts/feeds update helloworld
-./scripts/feeds install -a -p helloworld
+# 清理插件
+rm -rf feeds/luci/applications/luci-app-passwall
+rm -rf feeds/luci/applications/luci-app-adguardhome
+rm -rf feeds/packages/net/adguardhome
 
 # Git稀疏克隆，只克隆指定目录到本地
 function git_sparse_clone() {
@@ -19,5 +18,6 @@ function git_sparse_clone() {
 # 添加额外插件
 git clone --depth=1 https://github.com/sirpdboy/luci-app-adguardhome package/luci-app-adguardhome
 git clone --depth=1 https://github.com/EasyTier/luci-app-easytier package/luci-app-easytier
-
+# 添加 helloworld feed
+git clone --depth=1 helloworld https://github.com/fw876/helloworld package/helloworld
 ./scripts/feeds update -a
