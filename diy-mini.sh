@@ -16,19 +16,44 @@ function git_sparse_clone() {
 # 添加额外插件
 git clone --depth=1 https://github.com/sirpdboy/luci-app-adguardhome package/luci-app-adguardhome
 git clone --depth=1 https://github.com/EasyTier/luci-app-easytier package/luci-app-easytier
-# 移除 OpenWrt Feeds 自带的核心库
-rm -rf feeds/packages/net/{xray-core,chinadns-ng,dns2socks,hysteria,ipt2socks,microsocks,naiveproxy,shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev,simple-obfs,tcping,trojan-plus,tuic-client,v2ray-plugin,xray-plugin,geoview,shadow-tls}
-# git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall-packages package/passwall-packages
 
-# 移除 OpenWrt Feeds 过时的LuCI版本
+# 清理自带代理包
+rm -rf feeds/packages/net/chinadns-ng
+rm -rf feeds/packages/net/dns2socks
+rm -rf feeds/packages/net/dns2socks-rust
+rm -rf feeds/packages/net/dns2tcp
+rm -rf feeds/packages/net/dnsproxy
+rm -rf feeds/packages/net/gn
+rm -rf feeds/packages/net/hysteria
+rm -rf feeds/packages/net/ipt2socks
+rm -rf feeds/packages/net/microsocks
+rm -rf feeds/packages/net/mosdns
+rm -rf feeds/packages/net/naiveproxy
+rm -rf feeds/packages/net/redsocks2
+rm -rf feeds/packages/net/shadow-tls
+rm -rf feeds/packages/net/shadowsocks-libev
+rm -rf feeds/packages/net/shadowsocks-rust
+rm -rf feeds/packages/net/shadowsocksr-libev
+rm -rf feeds/packages/net/simple-obfs
+rm -rf feeds/packages/net/tcping
+rm -rf feeds/packages/net/trojan
+rm -rf feeds/packages/net/tuic-client
+rm -rf feeds/packages/net/v2ray-core
+rm -rf feeds/packages/net/v2ray-plugin
+rm -rf feeds/packages/net/xray-core
+rm -rf feeds/packages/net/xray-plugin
+
+# 清理相关 LuCI 应用
 rm -rf feeds/luci/applications/luci-app-passwall
-# git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall package/luci-app-passwall
-# git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2 package/luci-app-passwall2
+rm -rf feeds/luci/applications/luci-app-ssr-plus
+rm -rf feeds/luci/applications/luci-app-vssr
+rm -rf feeds/luci/applications/luci-app-trojan
+rm -rf feeds/luci/applications/luci-app-v2raya
 
-# 清理 PassWall 的 chnlist 规则文件
-echo "baidu.com"  > package/luci-app-passwall/luci-app-passwall/root/usr/share/passwall/rules/chnlist
+# 添加 helloworld feed
+echo "src-git helloworld https://github.com/fw876/helloworld.git" >> feeds.conf.default
 
-# 添加ssr-plus
-git clone --depth=1 https://github.com/fw876/helloworld package/helloworld
-
+# 4. 更新并安装 helloworld
+./scripts/feeds update helloworld
+./scripts/feeds install -a -p helloworld
 ./scripts/feeds update -a
