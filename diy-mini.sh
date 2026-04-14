@@ -19,5 +19,5 @@ function git_sparse_clone() {
 git clone --depth=1 https://github.com/sirpdboy/luci-app-adguardhome package/luci-app-adguardhome
 git clone --depth=1 https://github.com/EasyTier/luci-app-easytier package/luci-app-easytier
 # 添加 helloworld feed
-git clone --depth=1 https://github.com/fw876/helloworld package/helloworld
+# git clone --depth=1 https://github.com/fw876/helloworld package/helloworld
 ./scripts/feeds update -a
