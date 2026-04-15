@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # 清理插件
+rm -rf feeds/packages/onionshare-cli
 rm -rf feeds/luci/applications/luci-app-passwall
 rm -rf feeds/luci/applications/luci-app-adguardhome
 rm -rf feeds/packages/net/adguardhome
